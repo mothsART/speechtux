@@ -2,13 +2,9 @@
 extern crate libc;
 extern crate tempfile;
 
-use  std::ptr;
-use std::env;
-use std::str;
-use std::ffi;
-use std::ffi::{CString, c_void};
+use  std::{env, str};
+use std::ffi::{CString, c_void, CStr};
 use std::process::Command;
-
 
 use libc::{c_char, c_uchar, c_int, c_long, c_short, malloc};
 use tempfile::Builder;
@@ -58,7 +54,7 @@ extern "C" {
     fn pico_newEngine(
         ps: FfiPicoSystem,
         name: *const FfiPicoChar,
-        pe: *mut FfiPicoPE,//*mut FfiPicoEngine
+        pe: *mut FfiPicoPE,
     ) -> c_short;
     
     fn pico_putTextUtf8(
@@ -100,6 +96,9 @@ fn main() {
     let mut sr: FfiPicoResource = 0;
     let mut pe: FfiPicoPE = 0;
     let out_buf = 4096 as usize;
+    let level = "50";
+    let volume = "20";
+    let speed = "100";
     
     let named_temp_file = Builder::new()
                         .prefix("svoxpico_")
@@ -109,13 +108,28 @@ fn main() {
     let wave_path = named_temp_file.path().to_str().unwrap();
     
     let value = "Trop bien !";
-    let stream = format!(
+    let gen_file = format!(
         "<genfile file={path:?}>{data}</genfile>",
         path= wave_path,
         data= value
     );
-    println!("{}", stream);
-    let data   = CString::new(stream).expect("CString::new failed");
+    let volume_conf = format!(
+        "<volume level={volume:?}>{gen_file}</volume>",
+        volume= volume,
+        gen_file= gen_file
+    );
+    let speed_conf = format!(
+        "<speed level={speed:?}>{volume_conf}</speed>",
+        speed= speed,
+        volume_conf= volume_conf
+    );
+    let pitch = format!(
+        "<pitch level={level:?}>{speed_conf}</pitch>",
+        level= level,
+        speed_conf= speed_conf
+    );
+    println!("{}", pitch);
+    let data   = CString::new(pitch).expect("CString::new failed");
     let data_c = data.as_bytes_with_nul();
     let data_len = (data_c.len() + 1) as i16;
     println!("{:?}", data_len);
@@ -134,8 +148,8 @@ fn main() {
     let speaker_res_vec:Vec<u8> = vec![0; 200];
     let speaker_res = speaker_res_vec.as_slice();
     
-    let mut bytes_sent_vec:Vec<i32> = vec![0; OUT_BUFFER_SIZE as usize];
-    let mut bytes_sent = bytes_sent_vec.as_slice();
+    let bytes_sent_vec:Vec<i32> = vec![0; OUT_BUFFER_SIZE as usize];
+    let bytes_sent = bytes_sent_vec.as_slice();
     
     let mut bytes_received = 0;
     let mut data_type = 0;
@@ -197,7 +211,7 @@ fn main() {
             bytes_sent.as_ptr() as *const i16
         );
         pico_getSystemStatusMessage(ps, p_text, &mut ret_string);
-        println!("{:?}",  String::from_utf8_lossy(::std::ffi::CStr::from_ptr(&ret_string).to_bytes()).to_string());
+        println!("{:?}",  String::from_utf8_lossy(CStr::from_ptr(&ret_string).to_bytes()).to_string());
         p_text
     };
     println!("p_text {:?}", p_text);
