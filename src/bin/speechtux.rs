@@ -185,7 +185,7 @@ fn main() {
         pico_createVoiceDefinition(ps, name.as_ptr())
     };
     println!("create_voice {:?}", create_voice);
-    
+    /*
     let add_one = unsafe {
         pico_addResourceToVoiceDefinition(ps, name.as_ptr(), lang_res_name.as_ptr())
     };
@@ -229,4 +229,5 @@ fn main() {
             .arg(wave_path)
             .output()
             .expect("failed to execute process");
+            */
 }
