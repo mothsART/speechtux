@@ -240,9 +240,6 @@ impl Speech {
         let speaker_res = speaker_res_vec.as_slice();
         self.getRessource(sr, speaker_res);
 
-
-
-
         let c_string = CString::new("PicoVoice").expect("CString::new failed");
         let name = c_string.as_bytes_with_nul();
         self.createVoice(name);
