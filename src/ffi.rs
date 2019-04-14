@@ -1,4 +1,3 @@
-#![feature(rustc_private)]
 extern crate libc;
 extern crate tempfile;
 
@@ -122,7 +121,7 @@ impl Speech {
         }
     }
     
-    fn getStatus(&mut self, _status: i16) {
+    fn get_status(&mut self, _status: i16) {
         if self.debug {
             unsafe {
                 pico_getSystemStatusMessage(
@@ -152,31 +151,31 @@ impl Speech {
                 &mut self.ps
             )
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
     
-    fn loadRessource(&mut self, path: &[u8], resource: &mut i32) {
+    fn load_ressource(&mut self, path: &[u8], resource: &mut i32) {
         let _status = unsafe {
             pico_loadResource(self.ps, path.as_ptr(), resource)
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
     
-    fn getRessource(&mut self, resource: i32, outName: &[u8]) {
+    fn get_ressource(&mut self, resource: i32, out_name: &[u8]) {
         let _status = unsafe {
-            pico_getResourceName(self.ps, resource, outName.as_ptr())
+            pico_getResourceName(self.ps, resource, out_name.as_ptr())
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
 
-    fn createVoice(&mut self, name: &[u8]) {
+    fn create_voice(&mut self, name: &[u8]) {
         let _status = unsafe {
             pico_createVoiceDefinition(self.ps, name.as_ptr())
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
 
-    fn addRessource(&mut self, name: &[u8], res: &[u8]) {
+    fn add_ressource(&mut self, name: &[u8], res: &[u8]) {
         let _status = unsafe {
             pico_addResourceToVoiceDefinition(
                 self.ps,
@@ -184,10 +183,10 @@ impl Speech {
                 res.as_ptr()
             )
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
 
-    fn newEngine(&mut self, name: &[u8]) {
+    fn new_engine(&mut self, name: &[u8]) {
         let _status = unsafe {
             pico_newEngine(
                 self.ps,
@@ -195,10 +194,10 @@ impl Speech {
                 &mut self.pe
             )
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
 
-    fn putText(&mut self, pitch: String) {
+    fn put_text(&mut self, pitch: String) {
         let data   = CString::new(pitch).expect("CString::new failed");
         let data_c = data.as_bytes_with_nul();
         let data_len = (data_c.len() + 1) as i16;
@@ -212,7 +211,7 @@ impl Speech {
                 bytes_sent.as_ptr() as *const i16
             )
         };
-        self.getStatus(_status);
+        self.get_status(_status);
     }
     
     pub fn read(mut self, frame: Frame) {
@@ -223,32 +222,32 @@ impl Speech {
             get_path("fr-FR_ta.bin").unwrap()
         ).expect("CString::new failed");
         let fpath = f_string.as_bytes_with_nul();
-        self.loadRessource(fpath, &mut pr);
+        self.load_ressource(fpath, &mut pr);
 
         let lang_res_name_vec:Vec<u8> = vec![0; 200];
         let lang_res_name = lang_res_name_vec.as_slice();
-        self.getRessource(pr, lang_res_name);
+        self.get_ressource(pr, lang_res_name);
 
         let mut sr: FfiPicoResource = 0;
         let b_string = CString::new(
             get_path("fr-FR_nk0_sg.bin").unwrap()
         ).expect("CString::new failed");
         let bpath = b_string.as_bytes_with_nul();
-        self.loadRessource(bpath, &mut sr);
+        self.load_ressource(bpath, &mut sr);
         
         let speaker_res_vec:Vec<u8> = vec![0; 200];
         let speaker_res = speaker_res_vec.as_slice();
-        self.getRessource(sr, speaker_res);
+        self.get_ressource(sr, speaker_res);
 
         let c_string = CString::new("PicoVoice").expect("CString::new failed");
         let name = c_string.as_bytes_with_nul();
-        self.createVoice(name);
+        self.create_voice(name);
 
-        self.addRessource(name, lang_res_name);
+        self.add_ressource(name, lang_res_name);
         
-        self.addRessource(name, speaker_res);
+        self.add_ressource(name, speaker_res);
         
-        self.newEngine(name);
+        self.new_engine(name);
 
         let gen_file = format!(
             "<genfile file={path:?}>{data}</genfile>",
@@ -291,7 +290,7 @@ impl Speech {
             level= level,
             speed_conf= speed_conf
         );
-        self.putText(pitch);
+        self.put_text(pitch);
         
         let out_buf = 4096 as usize;
         let mut bytes_received = 0;

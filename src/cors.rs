@@ -8,11 +8,9 @@ use self::rocket::http::{Method};
 pub struct CORS<R> {
     responder: R,
     allow_origin: &'static str,
-    expose_headers: HashSet<&'static str>,
     allow_credentials: bool,
     allow_headers: HashSet<&'static str>,
-    allow_methods: HashSet<Method>,
-    max_age: Option<usize>
+    allow_methods: HashSet<Method>
 }
 
 pub type PreflightCORS = CORS<()>;
@@ -28,11 +26,9 @@ impl<'r, R: Responder<'r>> CORS<R> {
         CORS {
             responder: responder,
             allow_origin: origin,
-            expose_headers: HashSet::new(),
             allow_credentials: false,
             allow_headers: HashSet::new(),
             allow_methods: HashSet::new(),
-            max_age: None
         }
     }
 

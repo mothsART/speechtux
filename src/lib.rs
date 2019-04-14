@@ -21,15 +21,15 @@ pub extern "C" fn read(
         ).to_string()
     };
     let mut new_level = Some(100);
-    if (level >= 1 && level <= 200) {
+    if level >= 1 && level <= 200 {
         new_level = Some(level as i32);
     }
     let mut new_volume = Some(200);
-    if (volume >= 1 && volume <= 200) {
+    if volume >= 1 && volume <= 200 {
         new_volume = Some(volume as i32);
     }
     let mut new_speed = Some(100);
-    if (speed >= 1 && speed <= 300) {
+    if speed >= 1 && speed <= 300 {
         new_speed = Some(speed as i32);
     }
     let frame = ffi::Frame {
