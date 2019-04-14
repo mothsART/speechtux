@@ -3,6 +3,10 @@ name = "speechtux"
 version = "0.1.0"
 authors = ["Ferry Jérémie <ferryjeremie@free.fr>"]
 
+[lib]
+name = "speechtux"
+crate-type = ["rlib", "dylib"]
+
 [dependencies]
 tempfile = "3"
 libc = "0.2"

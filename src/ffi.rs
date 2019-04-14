@@ -99,10 +99,10 @@ pub struct Speech {
 
 #[derive(Deserialize)]
 pub struct Frame {
-    text: String,
-    level: Option<i32>,
-    volume: Option<i32>,
-    speed: Option<i32>
+    pub text: String,
+    pub level: Option<i32>,
+    pub volume: Option<i32>,
+    pub speed: Option<i32>
 }
 
 impl Speech {
@@ -123,7 +123,7 @@ impl Speech {
     }
     
     fn getStatus(&mut self, _status: i16) {
-        if (self.debug) {
+        if self.debug {
             unsafe {
                 pico_getSystemStatusMessage(
                     self.ps,
@@ -255,19 +255,40 @@ impl Speech {
             path= self.sound_path,
             data= frame.text
         );
+        let mut volume = 100;
+        match frame.volume {
+            Some(x) => {
+                volume = x;
+            },
+            None => {}
+        }
         let volume_conf = format!(
-            "<volume level={volume:?}>{gen_file}</volume>",
-            volume= frame.volume,
+            "<volume level=\"{volume:?}\">{gen_file}</volume>",
+            volume= volume,
             gen_file= gen_file
         );
+        let mut speed = 100;
+        match frame.speed {
+            Some(x) => {
+                speed = x;
+            },
+            None => {}
+        }
         let speed_conf = format!(
-            "<speed level={speed:?}>{volume_conf}</speed>",
-            speed= frame.speed,
+            "<speed level=\"{speed:?}\">{volume_conf}</speed>",
+            speed= speed,
             volume_conf= volume_conf
         );
+        let mut level = 100;
+        match frame.level {
+            Some(x) => {
+                level = x;
+            },
+            None => {}
+        }
         let pitch = format!(
-            "<pitch level={level:?}>{speed_conf}</pitch>",
-            level= frame.level,
+            "<pitch level=\"{level:?}\">{speed_conf}</pitch>",
+            level= level,
             speed_conf= speed_conf
         );
         self.putText(pitch);
