@@ -14,20 +14,20 @@ Fort de ce constat, j'ai décidé de partir d'une feuille blanche, de créer un 
 
 Le but du projet est de fournir :
 
-- une ligne de commande plus complète que celle de **pico2wave**
+- [ ] une ligne de commande plus complète que celle de **pico2wave**
 
-- une API C simplifié pour donner accès au fonctionnalité de **SpeechTux** à d'autres langages de programmation : Python notamment.
-  il sera notamment possible d'adapter l'extension **picovox** de libreoffice pour qu'il se base intégrallement sur cet outil :
+- [x] une API C simplifié pour donner accès au fonctionnalité de **SpeechTux** à d'autres langages de programmation : Python notamment.
+  il sera notamment possible d'adapter l'extension **picovox** de libreoffice pour qu'il se base intégralement sur cet outil :
   réduction du code, cohérence etc.
 
-- une interface en GTK similaire à celle de Gspeech mais plus fourni : **Gspeech** est bien pensé, le but n'est donc pas de révolutionné mais d'améliorer.
+- [ ] une interface en GTK similaire à celle de Gspeech mais plus fourni : **Gspeech** est bien pensé, le but n'est donc pas de révolutionné mais d'améliorer.
 
-- un serveur web permettant via une API Rest de piloter la lecture.
+- [ ] un serveur web permettant via une API Rest de piloter la lecture.
 L'avantage est d'avoir des applis en HTML5 qui peuvent bénéficier de cet outil facilement.
 
-- un moteur d'amélioration de la lecture. Là, on est dans le coeur du projet. **picovox** est un bon synthétiseur mais n'a rien pour reconnaitre des mots.
+- [ ] un moteur d'amélioration de la lecture. Là, on est dans le coeur du projet. **picovox** est un bon synthétiseur mais n'a rien pour reconnaitre des mots.
 
-- une gestion de la lecture unifié : pour éviter la cacophonie, seul 1 logiciel peut commanditer la lecture.
+- [ ] une gestion de la lecture unifié : pour éviter la cacophonie, seul 1 logiciel peut commanditer la lecture.
 Du coup, **speechtux** sera capable (en se basant sur la lib d'Alsa) de savoir quand la lecture c'est terminé.
 
 - un paquet .deb pour les distributions basé sur Debian.
@@ -54,6 +54,12 @@ Par exemple :
 
 ```sh
 firefox examples/javascript/index.html
+```
+
+Un example de programme en python se lance ainsi :
+
+```sh
+./examples/python/read.py
 ```
 
 ## D'autres améliorations envisageables

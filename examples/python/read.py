@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding: UTF-8
+# coding: utf8
 
 import os
 from os.path import dirname, abspath, join
